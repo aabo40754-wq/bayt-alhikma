@@ -1,8 +1,10 @@
+import books from '../data/books.json'
+
 const STATS = [
-  { value: '+300', label: 'عنوان منشور' },
-  { value: '+150', label: 'كاتب وكاتبة' },
-  { value: '18', label: 'عامًا من الخبرة' },
   { value: '+40', label: 'موزّعًا وشريكًا' },
+  { value: '18', label: 'عامًا من الخبرة' },
+  { value: '+150', label: 'كاتب وكاتبة' },
+  { value: `+${books.length || 300}`, label: 'عنوان منشور' },
 ]
 
 export default function Stats() {
