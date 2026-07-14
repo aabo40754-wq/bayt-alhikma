@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -28,6 +30,9 @@ jobs:
           cache: npm
           cache-dependency-path: bayt-alhikma-upload/package-lock.json
       - run: npm ci
+      - run: node scripts/fetch-books.mjs
+        env:
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
