@@ -1,16 +1,19 @@
 import { useState } from 'react'
-import { IconLamp } from './icons'
+import { IconLamp, IconCart } from './icons'
+import { useCart } from '../context/CartContext'
 
 const NAV = [
   { href: '#home', label: 'الرئيسية' },
-  { href: '#about', label: 'من نحن' },
-  { href: '#services', label: 'خدماتنا' },
-  { href: '#books', label: 'إصداراتنا' },
+  { href: '#books', label: 'الجديد' },
+  { href: '#books', label: 'النوادر' },
+  { href: '#books', label: 'المستعمل' },
+  { href: '#books', label: 'المخفض' },
   { href: '#contact', label: 'تواصل معنا' },
 ]
 
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const { count, setOpen: setCartOpen } = useCart()
 
   return (
     <header className="sticky top-0 z-50 bg-brand/95 backdrop-blur text-parchment shadow-lg shadow-black/10">
@@ -27,9 +30,9 @@ export default function Header() {
           </a>
 
           <nav className="hidden md:block">
-            <ul className="flex items-center gap-8 text-sm font-medium">
-              {NAV.map((item) => (
-                <li key={item.href}>
+            <ul className="flex items-center gap-6 text-sm font-medium">
+              {NAV.map((item, i) => (
+                <li key={item.label + i}>
                   <a href={item.href} className="transition-colors hover:text-gold-light">
                     {item.label}
                   </a>
@@ -38,28 +41,52 @@ export default function Header() {
             </ul>
           </nav>
 
-          <a
-            href="#contact"
-            className="hidden rounded-full bg-gold px-5 py-2 text-sm font-bold text-brand-dark transition hover:bg-gold-light md:inline-block"
-          >
-            تواصل معنا
-          </a>
+          <div className="hidden items-center gap-3 md:flex">
+            <button
+              type="button"
+              onClick={() => setCartOpen(true)}
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-parchment/20 transition hover:bg-white/10"
+              aria-label="سلة المشتريات"
+            >
+              <IconCart className="h-5 w-5" />
+              {count > 0 && (
+                <span className="absolute -top-1.5 -left-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-brand-dark">
+                  {count}
+                </span>
+              )}
+            </button>
+          </div>
 
-          <button
-            type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-md border border-parchment/20 md:hidden"
-            aria-label="فتح القائمة"
-            onClick={() => setOpen((v) => !v)}
-          >
-            <span className="text-xl leading-none">{open ? '×' : '☰'}</span>
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              type="button"
+              onClick={() => setCartOpen(true)}
+              className="relative flex h-10 w-10 items-center justify-center rounded-full border border-parchment/20"
+              aria-label="سلة المشتريات"
+            >
+              <IconCart className="h-5 w-5" />
+              {count > 0 && (
+                <span className="absolute -top-1.5 -left-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-brand-dark">
+                  {count}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              className="flex h-10 w-10 items-center justify-center rounded-md border border-parchment/20"
+              aria-label="فتح القائمة"
+              onClick={() => setOpen((v) => !v)}
+            >
+              <span className="text-xl leading-none">{open ? '×' : '☰'}</span>
+            </button>
+          </div>
         </div>
 
         {open && (
           <nav className="border-t border-parchment/10 pb-4 md:hidden">
             <ul className="flex flex-col gap-1 pt-2 text-sm font-medium">
-              {NAV.map((item) => (
-                <li key={item.href}>
+              {NAV.map((item, i) => (
+                <li key={item.label + i}>
                   <a
                     href={item.href}
                     onClick={() => setOpen(false)}

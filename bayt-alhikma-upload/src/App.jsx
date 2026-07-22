@@ -6,21 +6,26 @@ import Services from './components/Services'
 import Books from './components/Books'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import Cart from './components/Cart'
+import { CartProvider } from './context/CartContext'
 
 function App() {
   return (
-    <div className="min-h-screen bg-parchment font-sans text-ink">
-      <Header />
-      <main>
-        <Hero />
-        <Stats />
-        <About />
-        <Services />
-        <Books />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <CartProvider>
+      <div className="min-h-screen bg-parchment font-sans text-ink">
+        <Header />
+        <main>
+          <Hero />
+          <Stats />
+          <About />
+          <Services />
+          <Books />
+          <Contact />
+        </main>
+        <Footer />
+        <Cart />
+      </div>
+    </CartProvider>
   )
 }
 

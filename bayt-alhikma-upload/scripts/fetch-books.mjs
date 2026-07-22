@@ -1,3 +1,4 @@
+
 import { writeFileSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
@@ -13,6 +14,10 @@ if (!token) {
   console.warn('AIRTABLE_TOKEN is not set — writing empty books.json')
   writeFileSync(outFile, '[]\n')
   process.exit(0)
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 async function fetchAllRecords() {
@@ -40,17 +45,39 @@ async function fetchAllRecords() {
   return records
 }
 
+async function fetchCoverImage(title, author) {
+  try {
+    const q = encodeURIComponent(`intitle:${title}${author ? ' inauthor:' + author : ''}`)
+    const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1`)
+    if (!res.ok) return null
+    const data = await res.json()
+    const img = data.items?.[0]?.volumeInfo?.imageLinks?.thumbnail
+    return img ? img.replace('http://', 'https://') : null
+  } catch {
+    return null
+  }
+}
+
 const records = await fetchAllRecords()
 
-const books = records
+const rawBooks = records
   .map((r) => ({
     id: r.id,
     title: r.fields['اسم الكتاب'] || '',
     author: r.fields['اسم المؤلف'] || '',
     publisher: r.fields['دار النشر'] || '',
     status: r.fields['الحالة'] || '',
+    category: r.fields['القسم'] || 'جديد',
+    price: r.fields['السعر'] ?? null,
   }))
   .filter((b) => b.title)
 
+const books = []
+for (const book of rawBooks) {
+  const image = await fetchCoverImage(book.title, book.author)
+  books.push({ ...book, image })
+  await sleep(120)
+}
+
 writeFileSync(outFile, JSON.stringify(books, null, 2) + '\n')
-console.log(`Fetched ${books.length} books from Airtable.`)
+console.log(`Fetched ${books.length} books from Airtable (with cover images).`)

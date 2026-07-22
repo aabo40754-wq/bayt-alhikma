@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { IconMail, IconPhone, IconPin } from './icons'
 
 const INFO = [
-  { icon: IconPin, label: 'العنوان', value: 'شارع المتنبي، بغداد، العراق' },
-  { icon: IconPhone, label: 'الهاتف', value: '+964 770 000 0000' },
-  { icon: IconMail, label: 'البريد الإلكتروني', value: 'info@bayt-alhikma.com' },
+  { icon: IconPin, label: 'العنوان', value: 'الكويت - حولي - شارع المثنى - مجمع البدري - محل رقم 28' },
+  { icon: IconPhone, label: 'الهاتف / واتساب', value: '+965 6552 7877' },
+  { icon: IconMail, label: 'البريد الإلكتروني', value: 'alhekmah_house@hotmail.com' },
 ]
 
 export default function Contact() {
